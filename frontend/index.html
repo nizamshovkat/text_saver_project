@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Saver</title>
+</head>
+<body>
+    <h1>Text Saver App</h1>
+    <form id="textForm">
+        <label for="textInput">Enter your text:</label><br>
+        <textarea id="textInput" name="content" rows="4" cols="50"></textarea><br><br>
+        <button type="submit">Save</button>
+    </form>
+
+    <h2>Saved Texts</h2>
+    <ul id="textList"></ul>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        // Handle form submission
+        document.getElementById('textForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('textInput').value;
+
+            // Send text to the backend
+            const response = await fetch(`${API_URL}/texts/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ content })
+            });
+
+            if (response.ok) {
+                alert("Text saved successfully!");
+                document.getElementById('textInput').value = '';
+                fetchTexts();
+            } else {
+                alert("Failed to save text.");
+            }
+        });
+
+        // Fetch saved texts from the backend
+        async function fetchTexts() {
+            const response = await fetch(`${API_URL}/texts/`);
+            const texts = await response.json();
+            const textList = document.getElementById('textList');
+            textList.innerHTML = '';
+
+            texts.forEach((text) => {
+                const li = document.createElement('li');
+                li.textContent = text.content;
+                textList.appendChild(li);
+            });
+        }
+
+        // Load saved texts on page load
+        fetchTexts();
+    </script>
+</body>
+</html>
+

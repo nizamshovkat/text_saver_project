@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-saver-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: text-saver-app
+  template:
+    metadata:
+      labels:
+        app: text-saver-app
+    spec:
+      containers:
+      - name: text-saver-app-container
+        image: text-saver-app:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-saver-app-service
+spec:
+  selector:
+    app: text-saver-app
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 80
+  type: NodePort

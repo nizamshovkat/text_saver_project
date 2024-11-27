@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: text-saver-pod
+spec:
+  containers:
+  - name: text-saver-container
+    image: text-saver-app
+    ports:
+    - containerPort: 8000
